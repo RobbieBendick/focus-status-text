@@ -1,0 +1,5 @@
+## Interface: 30400
+## Author: Mageiden
+## Title: focus-status-text
+## Notes: Shows the secondary resource on your focus target.
+core.lua
