@@ -34,3 +34,16 @@ for i, v in pairs(relatedFrames) do
     _G[i]:HookScript("OnEnter", showText);
     _G[i]:HookScript("OnLeave", hideText);
 end
+
+-- check focus frame class
+local function checkRage(self)
+    if not UnitIsPlayer(self.unit) then return end
+    local _, class = UnitClass(self.unit);
+    if class ~= "ROGUE" or class ~= "WARRIOR" then
+        FocusFrameTextureFrame.ManaBarText:SetAlpha(0);
+    else
+        FocusFrameTextureFrame.ManaBarText:SetAlpha(1);
+    end
+end
+
+FocusFrame:HookScript("OnShow", checkRage)
