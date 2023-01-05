@@ -6,6 +6,15 @@ local relatedFrames = {
     ["PlayerFrameManaBar"] = PlayerFrameManaBarText,
 }
 
+-- set status text to numeric
+if GetCVar("statusTextDisplay") ~= "NUMERIC" then
+    SetCVar("statusTextDisplay", "NUMERIC")
+    print(
+        "|cff33ff99FocusFrameText|r: Your status text value has been changed to " ..
+        string.lower(GetCVar("statusTextDisplay")) .. "."
+    );
+end
+
 -- hide status text
 for _, v in pairs(relatedFrames) do
     v:SetAlpha(0);
@@ -29,14 +38,14 @@ local function hideText(self)
     end
 end
 
--- show health and mana bar(s) on mouseover
-for i, v in pairs(relatedFrames) do
+-- show health and mana bar text on mouseover
+for i in pairs(relatedFrames) do
     _G[i]:HookScript("OnEnter", showText);
     _G[i]:HookScript("OnLeave", hideText);
 end
 
 -- check focus frame class
-local function checkRage(self)
+local function checkClass(self)
     if not UnitIsPlayer(self.unit) then return end
     local _, class = UnitClass(self.unit);
     if class ~= "ROGUE" or class ~= "WARRIOR" then
@@ -46,4 +55,4 @@ local function checkRage(self)
     end
 end
 
-FocusFrame:HookScript("OnShow", checkRage)
+FocusFrame:HookScript("OnShow", checkClass);
