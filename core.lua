@@ -2,12 +2,6 @@ local _, core = ...;
 
 -- make our own status text
 local resourceTextFrame = CreateFrame("FRAME")
-resourceTextFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-resourceTextFrame:SetScript("OnEvent", function(self, event, ...)
-    if event == "PLAYER_ENTERING_WORLD" then
-        resourceTextFrame.text:Hide();
-    end
-end)
 resourceTextFrame.text = resourceTextFrame:CreateFontString(nil, "OVERLAY", "TextStatusBarText")
 resourceTextFrame.text:SetPoint("CENTER", FocusFrameManaBar, "CENTER", 0, 0)
 
@@ -37,5 +31,13 @@ frame:SetScript("OnEvent", function(self, event, ...)
                 resourceTextFrame.text:Hide()
             end
         end
+    end
+end)
+
+-- hide our own status text when entering the world
+resourceTextFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+resourceTextFrame:SetScript("OnEvent", function(self, event, ...)
+    if event == "PLAYER_ENTERING_WORLD" then
+        resourceTextFrame.text:Hide();
     end
 end)
