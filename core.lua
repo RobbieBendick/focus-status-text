@@ -1,58 +1,41 @@
-local relatedFrames = {
-    ["TargetFrameHealthBar"] = TargetFrameTextureFrame.HealthBarText,
-    ["TargetFrameManaBar"] = TargetFrameTextureFrame.ManaBarText,
-    ["FocusFrameHealthBar"] = FocusFrameTextureFrame.HealthBarText,
-    ["PlayerFrameHealthBar"] = PlayerFrameHealthBarText,
-    ["PlayerFrameManaBar"] = PlayerFrameManaBarText,
-}
+local _, core = ...;
 
--- set status text to numeric
-if GetCVar("statusTextDisplay") ~= "NUMERIC" then
-    SetCVar("statusTextDisplay", "NUMERIC")
-    print(
-        "|cff33ff99FocusFrameText|r: Your status text value has been changed to " ..
-        string.lower(GetCVar("statusTextDisplay")) .. "."
-    );
-end
-
--- hide status text
-for _, v in pairs(relatedFrames) do
-    v:SetAlpha(0);
-end
-
-local function showText(self)
-    for i, v in pairs(relatedFrames) do
-        if i == self:GetName() then
-            v:SetAlpha(1);
-            break;
-        end
+-- make our own status text
+local resourceTextFrame = CreateFrame("FRAME")
+resourceTextFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+resourceTextFrame:SetScript("OnEvent", function(self, event, ...)
+    if event == "PLAYER_ENTERING_WORLD" then
+        resourceTextFrame.text:Hide();
     end
-end
+end)
+resourceTextFrame.text = resourceTextFrame:CreateFontString(nil, "OVERLAY", "TextStatusBarText")
+resourceTextFrame.text:SetPoint("CENTER", FocusFrameManaBar, "CENTER", 0, 0)
 
-local function hideText(self)
-    for i, v in pairs(relatedFrames) do
-        if i == self:GetName() then
-            v:SetAlpha(0);
-            break;
-        end
-    end
-end
-
--- show health and mana bar text on mouseover
-for i in pairs(relatedFrames) do
-    _G[i]:HookScript("OnEnter", showText);
-    _G[i]:HookScript("OnLeave", hideText);
-end
-
--- check focus frame class
-local function checkClass(self)
-    if not UnitIsPlayer(self.unit) then return end
-    local _, class = UnitClass(self.unit);
-    if class ~= "ROGUE" or class ~= "WARRIOR" then
-        FocusFrameTextureFrame.ManaBarText:SetAlpha(0);
+-- hook the mana bar to show our own status text
+FocusFrameManaBar:HookScript("OnValueChanged", function(self)
+    if GetCVar("statusTextDisplay") ~= "NONE" then return end
+    local _, powerType = UnitPowerType(self.unit);
+    local mana, maxMana = UnitPower(self.unit), UnitPowerMax(self.unit);
+    if powerType ~= "MANA" then
+        resourceTextFrame.text:SetText(mana .. "/" .. maxMana)
+        resourceTextFrame.text:Show()
     else
-        FocusFrameTextureFrame.ManaBarText:SetAlpha(1);
+        resourceTextFrame.text:Hide()
     end
-end
+end);
 
-FocusFrame:HookScript("OnShow", checkClass);
+-- hide our own status text when status text is displayed
+local frame = CreateFrame("FRAME")
+frame:RegisterEvent("CVAR_UPDATE")
+frame:SetScript("OnEvent", function(self, event, ...)
+    if event == "CVAR_UPDATE" then
+        local cvar, value = ...;
+        if cvar == "STATUS_TEXT_DISPLAY" then
+            if value == "NONE" then
+                resourceTextFrame.text:Show()
+            else
+                resourceTextFrame.text:Hide()
+            end
+        end
+    end
+end)
