@@ -1,5 +1,6 @@
 local _, core = ...;
 
+-- object to hold our status text functions
 local statusTextObj = {
     ["RAGE"] = function(self, frame)
         local resource = UnitPower(self.unit);
