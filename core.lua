@@ -7,7 +7,7 @@ local statusTextObj = {
         local class = select(2, UnitClass(self.unit));
         if class ~= "WARRIOR" then return end
 
-        if resource > 10 and resource < 15 then
+        if resource >= 10 and resource < 15 then
             frame.text:SetText("CANNOT REFLECT");
         elseif resource < 10 then
             frame.text:SetText("CANNOT KICK");
@@ -20,7 +20,9 @@ local statusTextObj = {
         local class = select(2, UnitClass(self.unit));
         if class ~= "ROGUE" then return end
 
-        if resource < 25 then
+        if resource >= 15 and resource < 45 then
+            frame.text:SetText("CANNOT GOUGE");
+        elseif resource < 15 then
             frame.text:SetText("CANNOT KICK");
         else
             frame.text:SetText(resource);
@@ -30,8 +32,9 @@ local statusTextObj = {
         local resource = UnitPower(self.unit);
         local class = select(2, UnitClass(self.unit));
         if class ~= "DEATHKNIGHT" then return end
-
-        if resource < 20 then
+        if resource >= 20 and resource < 40 then
+            frame.text:SetText("CANNOT DEATH PACT");
+        elseif resource < 20 then
             frame.text:SetText("CANNOT AMS");
         else
             frame.text:SetText(resource);
