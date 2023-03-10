@@ -68,7 +68,7 @@ resourceTextFrame:SetScript("OnEvent", function(self, event, ...)
     end
 end);
 
--- show our own status text when focus frame is hidden
+-- show our own status text when focus frame is shown
 FocusFrame:HookScript("OnShow", function(self)
     local _, powerType = UnitPowerType(self.unit);
     local resource = UnitPower(self.unit);
