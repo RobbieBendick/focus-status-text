@@ -11,7 +11,7 @@ FocusFrameManaBar:HookScript("OnValueChanged", function(self)
     local _, powerType = UnitPowerType(self.unit);
     local mana, maxMana = UnitPower(self.unit), UnitPowerMax(self.unit);
     if powerType ~= "MANA" then
-        resourceTextFrame.text:SetText(mana .. "/" .. maxMana);
+        resourceTextFrame.text:SetText(mana);
         resourceTextFrame.text:Show();
     else
         resourceTextFrame.text:Hide();
